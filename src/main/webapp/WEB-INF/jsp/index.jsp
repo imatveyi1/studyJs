@@ -4,7 +4,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Зажжем!!!</title>
+        <title>Главная страница</title>
     </head>
     <body>
         <script src="./resources/js/react-15.3.1/build/react.js"></script>
