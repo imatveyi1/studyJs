@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!-- was: <?xml version="1.0" encoding="UTF-8"?> -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd">
+
+    <!--bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+          p:location="/WEB-INF/jdbc.properties" />
+
+<bean id="dataSource"
+    class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+    p:driverClassName="${jdbc.driverClassName}"
+    p:url="${jdbc.url}"
+    p:username="${jdbc.username}"
+    p:password="${jdbc.password}" /-->
+
+    <!-- ADD PERSISTENCE SUPPORT HERE (jpa, hibernate, etc) -->
+    
+    <bean id="aObjectMapper" class="com.my.algorithms.utils.AObjectMapper" />
+
+    <bean id="jacksonConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <property name="objectMapper" ref="aObjectMapper" />
+    </bean>
+
+    <bean id="jaxb2XmlConverter" class="org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter" />
+    <bean id="jaxb2CollectionConverter" class="org.springframework.http.converter.xml.Jaxb2CollectionHttpMessageConverter" />
+
+    <!--Сканирование пакетов, для поднятия компонентов-->
+    <context:component-scan base-package="com.my.algorithms">
+        <context:exclude-filter type="annotation" expression="javax.annotation.Resource" />
+        <context:exclude-filter type="regex" expression="com.my.algorithms" />
+    </context:component-scan>
+    
+    <bean id="testBean" class="com.my.algorithms.aop.testbean.TestBeanAop"/> 
+    <bean id="aspectBean" class="com.my.algorithms.aop.Aspect" init-method="init"/> 
+    <aop:config> 
+        <aop:aspect ref="aspectBean"> 
+            <aop:pointcut id="testBeanPointcut" expression="execution (* com.my.algorithms.aop.testbean.TestBeanAop.test(..))"/> 
+            <aop:before method="before" pointcut-ref="testBeanPointcut"/> 
+            <aop:after method="after" pointcut-ref="testBeanPointcut"/> 
+        </aop:aspect> 
+    </aop:config>
+    
+</beans>

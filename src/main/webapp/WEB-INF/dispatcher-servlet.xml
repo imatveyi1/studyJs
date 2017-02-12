@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!-- was: <?xml version="1.0" encoding="UTF-8"?> -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.2.xsd">
+
+    <mvc:annotation-driven/>
+
+<!--    <bean name="indexController"
+          class="org.springframework.web.servlet.mvc.ParameterizableViewController"
+          p:viewName="index" />-->
+        
+    <!--<bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping"/>-->
+        
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <ref bean="jacksonConverter" />
+                <ref bean="jaxb2XmlConverter" />
+                <ref bean="jaxb2CollectionConverter" />
+            </list>
+        </property>
+        <property name="requireSession" value="false" />
+    </bean>
+
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <property name="contentNegotiationManager">
+            <bean class="org.springframework.web.accept.ContentNegotiationManager">
+                <constructor-arg>
+                    <bean class="org.springframework.web.accept.PathExtensionContentNegotiationStrategy">
+                        <constructor-arg>
+                            <map>
+                                <entry key="json" value="application/json" />
+                                <entry key="xml" value="text/xml" />
+                                <entry key="html" value="text/html" />
+                                <entry key="text" value="text/plain" />
+                            </map>
+                        </constructor-arg>
+                    </bean>
+                </constructor-arg>
+            </bean>
+        </property>
+        <property name="viewResolvers">
+            <list>
+                <bean id="viewResolver"
+                      class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+                      p:prefix="/WEB-INF/jsp/"
+                      p:suffix=".jsp"
+                      p:viewClass="org.springframework.web.servlet.view.JstlView">
+                </bean>
+            </list>
+        </property>
+    </bean>
+   
+   <mvc:resources mapping="/resources/**" location="/resources/" />
+   
+    <context:component-scan base-package="com.my.algorithms.controllers">
+        <context:exclude-filter type="annotation" expression="javax.annotation.Resource" />
+    </context:component-scan>
+
+</beans>
